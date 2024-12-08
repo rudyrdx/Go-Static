@@ -14,8 +14,9 @@ This project is a static site generator designed to streamline the development o
 Ensure you have Go installed on your machine as it is required for compiling templates. Clone the project repository and navigate to the project directory.
 
 ```bash
-git clone <repository-url>
-cd <project-name>
+git clone https://github.com/rudyrdx/Go-Static
+cd cmd
+make build
 ```
 
 ## Usage
