@@ -4,7 +4,7 @@
 This project is a static site generator designed to streamline the development of static web pages using pre-defined templates [templ](https://github.com/a-h/templ) and a structured file organization. It simplifies the process of setting up a project, adding new pages, and compiling them into a static output that can be easily served by a web server.
 
 ## Demo
-<iframe width="560" height="315" src="https://www.youtube.com/embed/KvXslPeZiEA?si=75voSd-LNdaYFL8D" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+[![YouTube Video](https://img.youtube.com/vi/KvXslPeZiEA/0.jpg)](https://www.youtube.com/watch?v=KvXslPeZiEA)
 
 ## Features
 
