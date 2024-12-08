@@ -1,7 +1,7 @@
 # Go-Static
 ## Overview
 
-This project is a static site generator designed to streamline the development of static web pages using pre-defined templates and a structured file organization. It simplifies the process of setting up a project, adding new pages, and compiling them into a static output that can be easily served by a web server.
+This project is a static site generator designed to streamline the development of static web pages using pre-defined templates [templ](https://github.com/a-h/templ) and a structured file organization. It simplifies the process of setting up a project, adding new pages, and compiling them into a static output that can be easily served by a web server.
 
 ## Features
 
@@ -90,7 +90,7 @@ This will perform the following actions:
 
 ## Viewing the Site
 
-After compiling, a local server will be started to view the generated static files. Simply open your web browser and navigate to `localhost:<port>` (ensure to check the console output for the port being used).
+After compiling, the output folder will consist of all the output html files and the styles or scripts mentioned in the public dir. for now you can use any fileserver like vs-code go live extension or any http server
 
 ## Contributing
 
@@ -102,4 +102,4 @@ This project is licensed under the MIT License. See the `LICENSE` file for more 
 
 ## Contact
 
-For any questions, feel free to open an issue in the repository or contact us via [email](mailto:contact@example.com).
+For any questions, feel free to open an issue in the repository or contact us via [email](mailto:rudyrdx21@gmail.com).
