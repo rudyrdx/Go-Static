@@ -18,7 +18,9 @@ Ensure you have Go installed on your machine as it is required for compiling tem
 
 ```bash
 git clone https://github.com/rudyrdx/Go-Static
+cd Go-Static
 cd cmd
+choco install make
 make build
 ```
 
