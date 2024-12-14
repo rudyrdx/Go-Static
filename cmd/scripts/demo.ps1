@@ -31,9 +31,9 @@ Write-Host "Project compiled successfully." -ForegroundColor Green
 # Step 4: Serve the compiled output using Python HTTP server
 Write-Host "`nStarting HTTP server to serve the compiled project..." -ForegroundColor Cyan
 # Start-Process -NoNewWindow -FilePath "python" -ArgumentList "-m http.server --directory $outputDir 8000"
-& $exePath watch
+
 # Open the browser to display the served project
 Start-Sleep -Seconds 2  # Allow server to start
 Start-Process "http://localhost:8000"
-
+& $exePath watch
 Write-Host "`nDemo completed. Visit http://localhost:8000 to view the project." -ForegroundColor Green
