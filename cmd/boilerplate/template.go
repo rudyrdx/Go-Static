@@ -130,6 +130,30 @@ templ Layout(title string) {
 			<header></header>
 			{ children... }
 			<footer></footer>
+			<!-- WebSocket connection to the server remove this before deployment-->
+			<script>
+				const ws = new WebSocket('ws://localhost:8000/ws');
+
+				ws.onopen = () => {
+					console.log('Connected to WebSocket server.');
+				};
+
+				ws.onmessage = (event) => {
+					console.log('Message received:', event.data);
+					if (event.data === 'reload') {
+						console.log('Reloading page...');
+						location.reload();
+					}
+				};
+
+				ws.onerror = (error) => {
+					console.error('WebSocket error:', error);
+				};
+
+				ws.onclose = () => {
+					console.log('WebSocket connection closed.');
+				};
+    		</script>
 		</body>
 	</html>
 }`
