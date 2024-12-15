@@ -1,18 +1,115 @@
 package main
 
 import (
-	"1/1/functions/config"
-	"1/1/functions/setup"
-	"fmt"
-	"net/http"
-	"os"
-	"path/filepath"
-	"sync"
+	"bufio"    // For reading user input
+	"fmt"      // For formatted I/O operations
+	"net/http" // For HTTP server functionality
+	"os"       // For file and environment operations
+	"os/exec"
+	"path/filepath" // For handling file paths
+	"strings"       // For string manipulations
+	"sync"          // For synchronizing concurrent operations
+	"time"
 
-	"github.com/fsnotify/fsnotify"
-	"github.com/gorilla/websocket"
+	"github.com/fsnotify/fsnotify" // For file system notifications
+	"github.com/gorilla/websocket" // For WebSocket handling
+
+	"1/1/functions/config" // Custom configuration handling
+	"1/1/functions/setup"  // Custom project setup utilities
 )
 
+const (
+	Reset  = "\033[0m"
+	Red    = "\033[31m"
+	Green  = "\033[32m"
+	Yellow = "\033[33m"
+)
+
+// handling the add command
+func handleAddCommand() {
+	if len(os.Args) < 3 {
+		fmt.Println("Please provide a page name: static add <page name>")
+		return
+	}
+	pageName := os.Args[2]
+
+	// Validate page name
+	if strings.ContainsAny(pageName, " -./\\<>:\"|?*") || strings.HasSuffix(pageName, ".exe") {
+		fmt.Println(Red + "Error: Invalid page name. Use only alphanumeric characters and avoid special symbols or '.exe' extensions." + Reset)
+		return
+	}
+
+	fmt.Printf(Yellow+"You are about to add a page named '%s'. Confirm (y/n): "+Reset, pageName)
+	reader := bufio.NewReader(os.Stdin)
+	confirmation, _ := reader.ReadString('\n')
+	confirmation = strings.TrimSpace(strings.ToLower(confirmation))
+
+	// Validate confirmation input
+	if confirmation != "y" && confirmation != "n" {
+		fmt.Println(Red + "Invalid input. Please type 'y' for yes or 'n' for no." + Reset)
+		return
+	}
+
+	if confirmation == "n" {
+		fmt.Println(Yellow + "Page addition canceled." + Reset)
+		return
+	}
+
+	// Add the page
+	setup.AddPage(pageName)
+	fmt.Println(Green + "Page created successfully. Running compile command..." + Reset)
+
+	// Automatically run the compile command
+	compileCmd := exec.Command(".\\static.exe", "compile")
+	compileCmd.Stdout = os.Stdout
+	compileCmd.Stderr = os.Stderr
+
+	err := compileCmd.Run()
+	if err != nil {
+		fmt.Println(Red+"Error running compile command:"+Reset, err)
+	} else {
+		fmt.Println(Green + "Compile command executed successfully!" + Reset)
+	}
+}
+
+// loading bar component
+func greenRectangularLoadingBar(duration time.Duration) {
+	green := "\033[32m" // ANSI code for green
+	reset := "\033[0m"  // ANSI code to reset color
+
+	totalLength := 30 // Length of the progress bar (number of blocks)
+
+	// Print the start of the progress bar with the message
+	fmt.Print("Setting up the project: [")
+
+	// Display empty part of the progress bar (filled with spaces for now)
+	for i := 0; i < totalLength; i++ {
+		fmt.Print(" ")
+	}
+	fmt.Print("]")
+
+	// Simulate the progress and update the progress bar
+	for i := 0; i <= totalLength; i++ {
+		fmt.Print("\rSetting up the project: [")
+		// Print the filled portion (green blocks)
+		for j := 0; j < i; j++ {
+			fmt.Print(green + "█" + reset)
+		}
+		// Print the remaining empty portion
+		for j := i; j < totalLength; j++ {
+			fmt.Print(" ")
+		}
+		fmt.Print("]")
+
+		// Adjust the speed of the progress bar filling
+		time.Sleep(duration / time.Duration(totalLength))
+	}
+
+	// After the bar is filled, print a completion message
+	fmt.Println("\nProject setup complete!")
+}
+
+// main function
 func main() {
 	if len(os.Args) < 2 {
 		fmt.Println("Usage: static [setup|add <page name>]")
@@ -24,28 +121,61 @@ func main() {
 	command := os.Args[1]
 	switch command {
 	case "setup":
-		if len(os.Args) < 3 {
-			fmt.Println("Please provide the project name: static setup <project name>")
+		reader := bufio.NewReader(os.Stdin)
+
+		// Prompt for project name
+		fmt.Print("Project name: ")
+		projectName, _ := reader.ReadString('\n')
+		projectName = strings.TrimSpace(projectName)
+
+		// Validate project name
+		if strings.Contains(projectName, " ") {
+			fmt.Println("Error: Project name cannot contain spaces.")
 			return
 		}
-		projectName := os.Args[2]
+		if len(projectName) > 100 {
+			fmt.Println("Error: Project name cannot exceed 100 characters.")
+			return
+		}
+
+		// Prompt for description
+		fmt.Print(Yellow + "Description: " + Reset)
+		description, _ := reader.ReadString('\n')
+		description = strings.TrimSpace(description)
+
+		// Prompt for author name
+		fmt.Print(Yellow + "Author: " + Reset)
+		author, _ := reader.ReadString('\n')
+		author = strings.TrimSpace(author)
+
+		// Simulate loading bar
+		greenRectangularLoadingBar(2 * time.Second)
+
+		// Output details
+		fmt.Printf(Green + "\nProject setup complete:\n" + Reset)
+		fmt.Printf(Green+"Project name: %s\nDescription: %s\nAuthor: %s\n"+Reset, projectName, description, author)
+
+		// Call the setup function
 		setup.SetupProject(projectName, staticjson)
+
 	case "add":
-		if len(os.Args) < 3 {
-			fmt.Println("Please provide a page name: static add <page name>")
-			return
-		}
-		pageName := os.Args[2]
-		setup.AddPage(pageName)
+		handleAddCommand()
+
 	case "compile":
 		setup.CompileProject()
+
 	case "watch":
 		watchProject()
+
+	case "help":
+		showHelp()
+
 	default:
 		fmt.Println("Unknown command. Use 'setup' or 'add <page name>'.")
 	}
 }
 
+// watch command to host the project
 func watchProject() {
 	// WebSocket upgrader from the Gorilla WebSocket package.
 	var upgrader = websocket.Upgrader{
@@ -172,4 +302,15 @@ func watchProject() {
 	}
 
 	// The server will block here, so no need for a select{} or similar.
+}
+
+// Show .help text
+func showHelp() {
+	fmt.Println("Usage: static [command] [options]")
+	fmt.Println("\nCommands:")
+	fmt.Println("  setup          Configure your project interactively. It will guide you through the setup process.")
+	fmt.Println("  add <page name> Add one or more pages to the project in a loop.")
+	fmt.Println("  compile        Compile the entire project for production.")
+	fmt.Println("  watch          Start a development server and watch for file changes.")
+	fmt.Println("  help           Show this help message and list all available commands.")
 }
