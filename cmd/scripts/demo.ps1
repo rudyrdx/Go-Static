@@ -1,6 +1,5 @@
 # Define the executable and base directory
 $exePath = ".\static.exe"
-$outputDir = ".\output"  # Directory where the compiled project will be located
 
 # Step 1: Setup the project
 Write-Host "Setting up the project..." -ForegroundColor Green
@@ -30,11 +29,11 @@ Write-Host "`nCompiling the project..." -ForegroundColor Green
 Write-Host "Project compiled successfully." -ForegroundColor Green
 
 # Step 4: Serve the compiled output using Python HTTP server
-Write-Host "`nStarting Python HTTP server to serve the compiled project..." -ForegroundColor Cyan
-Start-Process -NoNewWindow -FilePath "python" -ArgumentList "-m http.server --directory $outputDir 8000"
+Write-Host "`nStarting HTTP server to serve the compiled project..." -ForegroundColor Cyan
+# Start-Process -NoNewWindow -FilePath "python" -ArgumentList "-m http.server --directory $outputDir 8000"
 
 # Open the browser to display the served project
 Start-Sleep -Seconds 2  # Allow server to start
 Start-Process "http://localhost:8000"
-
+& $exePath watch
 Write-Host "`nDemo completed. Visit http://localhost:8000 to view the project." -ForegroundColor Green

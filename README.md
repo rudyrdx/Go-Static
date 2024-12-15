@@ -31,8 +31,7 @@ make build
 To set up the initial project structure, run:
 
 ```bash
-cd 1
-static setup < >
+static setup <project-name>
 ```
 
 This command will create the following directory structure:
