@@ -1,6 +1,6 @@
-module 1/1
+module github.com/rudyrdx/Go-Static
 
-go 1.22.4
+go 1.23.0
 
 require (
 	github.com/fsnotify/fsnotify v1.8.0
@@ -8,4 +8,4 @@ require (
 	golang.org/x/text v0.21.0
 )
 
-require golang.org/x/sys v0.13.0 // indirect
+require golang.org/x/sys v0.28.0 // indirect

@@ -1,7 +1,7 @@
 package config
 
 import (
-	"1/1/functions/helpers"
+	"github.com/rudyrdx/Go-Static/functions/helpers"
 	"encoding/json"
 	"fmt"
 	"os"

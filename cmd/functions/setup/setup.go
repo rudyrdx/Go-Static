@@ -1,15 +1,16 @@
 package setup
 
 import (
-	"1/1/boilerplate"
-	"1/1/functions/config"
-	"1/1/functions/helpers"
 	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 	"text/template"
+
+	"github.com/rudyrdx/Go-Static/boilerplate"
+	"github.com/rudyrdx/Go-Static/functions/config"
+	"github.com/rudyrdx/Go-Static/functions/helpers"
 
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"

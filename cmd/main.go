@@ -1,13 +1,15 @@
 package main
 
 import (
-	"1/1/functions/config"
-	"1/1/functions/setup"
 	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
 	"sync"
+
+	"github.com/rudyrdx/Go-Static/functions/setup"
+
+	"github.com/rudyrdx/Go-Static/functions/config"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/gorilla/websocket"
@@ -20,7 +22,6 @@ func main() {
 	}
 
 	var staticjson config.StaticJson
-
 	command := os.Args[1]
 	switch command {
 	case "setup":
@@ -46,7 +47,7 @@ func main() {
 	}
 }
 
-func watchProject() {
+func WatchProject() {
 	// WebSocket upgrader from the Gorilla WebSocket package.
 	var upgrader = websocket.Upgrader{
 		// Allow connections from any origin; for production, adjust this.
